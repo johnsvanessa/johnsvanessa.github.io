@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,5 +92,583 @@
             color: white;
             text-decoration: none;
             border-radius: 6px;
-            font-weight: bold
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #555;
+        }
+
+        .daily-message {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .history-event {
+            margin-bottom: 18px;
+        }
+
+        .history-date {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .history-sentence {
+            line-height: 1.45;
+        }
+
+        .history-link {
+            margin-top: 20px;
+        }
+
+        .history-link a {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .bmac {
+            margin-top: 0;
+        }
+
+        @media (max-width: 750px) {
+            body {
+                padding: 20px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            #todayDate {
+                font-size: 16px;
+                text-align: right;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Daily Drills</h1>
+        <div id="todayDate"></div>
+    </div>
+
+    <div class="main-grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="column">
+
+            <!-- DAILY VIDEO -->
+            <div class="tile">
+                <h2>Daily Video</h2>
+                <div id="dailyVideo"></div>
+            </div>
+
+            <!-- 3-DRILL ROTATION -->
+            <div class="tile">
+                <h2>3-Drill Rotation</h2>
+                <div id="rotatingDrill"></div>
+            </div>
+
+            <!-- LEGAL TERM -->
+            <div class="tile">
+                <h2>Legal Term of the Week</h2>
+                <div id="legalTerm">
+                    <p class="daily-message">
+                        Loading this week's legal term...
+                    </p>
+                </div>
+            </div>
+
+            <!-- BUY ME A COFFEE -->
+            <div class="bmac">
+                <a href="https://www.buymeacoffee.com/vanessacr" target="_blank">
+                    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png"
+                         alt="Buy Me a Coffee"
+                         style="height: 60px !important;width: 217px !important;">
+                </a>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="column">
+
+            <!-- ON THIS DAY -->
+            <div class="tile">
+                <h2>On This Day</h2>
+                <div id="onThisDay">
+                    <p class="daily-message">
+                        Loading today's events...
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+/* =========================
+   DATE
+========================= */
+
+function displayTodayDate() {
+    const today = new Date();
+
+    const formattedDate = today.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+
+    document.getElementById("todayDate").textContent = formattedDate;
+}
+
+
+/* =========================
+   DAILY VIDEO
+========================= */
+
+const dailyVideos = {
+    Monday: "https://www.youtube.com/watch?v=E7F8B352_sk",
+    Tuesday: "https://www.youtube.com/watch?v=aMn53B1KtFk",
+    Wednesday: "https://www.youtube.com/watch?v=kmdA-WqLn34",
+    Thursday: "https://www.youtube.com/watch?v=_Rga7Hs8QjA",
+    Friday: "https://www.youtube.com/watch?v=nO--0GOjSZ8"
+};
+
+function displayDailyVideo() {
+    const container = document.getElementById("dailyVideo");
+    const today = new Date();
+
+    const dayName = today.toLocaleDateString("en-US", {
+        weekday: "long"
+    });
+
+    if (dailyVideos[dayName]) {
+        container.innerHTML = `
+            <a class="button"
+               href="${dailyVideos[dayName]}"
+               target="_blank"
+               rel="noopener noreferrer">
+                Open Daily Video
+            </a>
+        `;
+    } else {
+        container.innerHTML = `
+            <p class="daily-message">
+                No daily video on Saturday or Sunday.
+            </p>
+        `;
+    }
+}
+
+
+/* =========================
+   3-DRILL ROTATION
+========================= */
+
+const rotatingDrills = {
+    Alphabet: "https://www.youtube.com/watch?v=t7F9mzdxCis",
+    Letter: "https://www.youtube.com/watch?v=agc2LbxKa9U",
+    Number: "https://www.youtube.com/watch?v=RJAKSweYwHM"
+};
+
+const startDate = new Date(2026, 8, 10);
+
+function displayRotatingDrill() {
+    const container = document.getElementById("rotatingDrill");
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
+
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const daysSinceStart = Math.floor(
+        (today - startDate) / millisecondsPerDay
+    );
+
+    const drillNames = ["Alphabet", "Letter", "Number"];
+
+    const index =
+        ((daysSinceStart % drillNames.length) + drillNames.length)
+        % drillNames.length;
+
+    const drillName = drillNames[index];
+    const drillUrl = rotatingDrills[drillName];
+
+    container.innerHTML = `
+        <div class="drill-name">${drillName} Drill</div>
+
+        <a class="button"
+           href="${drillUrl}"
+           target="_blank"
+           rel="noopener noreferrer">
+            Open ${drillName} Drill
+        </a>
+    `;
+}
+
+
+/* =========================
+   LEGAL TERM OF THE WEEK
+========================= */
+
+const legalTerms = [
+
+    { term: "Deposition", definition: "A sworn statement taken before trial, usually outside the courtroom." },
+
+    { term: "Affidavit", definition: "A written statement that a person swears is true." },
+
+    { term: "Arraignment", definition: "A court proceeding in which a defendant is formally told the charges and enters a plea." },
+
+    { term: "Continuance", definition: "A postponement of a court proceeding until a later date." },
+
+    { term: "Subpoena", definition: "A legal order requiring someone to appear, testify, or provide documents." },
+
+    { term: "Impeachment", definition: "The process of challenging a witness's credibility or testimony." },
+
+    { term: "Stipulation", definition: "An agreement between parties about a fact or issue in a case." },
+
+    { term: "Plaintiff", definition: "The person or party who brings a civil lawsuit." },
+
+    { term: "Defendant", definition: "The person or party being sued or accused of a crime." },
+
+    { term: "Petitioner", definition: "A person who formally asks a court to take a particular action." },
+
+    { term: "Respondent", definition: "The person or party responding to a petition or legal proceeding." },
+
+    { term: "Litigation", definition: "The process of resolving a dispute through the court system." },
+
+    { term: "Jurisdiction", definition: "A court's legal authority to hear a case." },
+
+    { term: "Venue", definition: "The particular court or geographic location where a case is heard." },
+
+    { term: "Complaint", definition: "The document that begins a civil lawsuit by stating the plaintiff's claims." },
+
+    { term: "Answer", definition: "A defendant's formal written response to a complaint." },
+
+    { term: "Pleading", definition: "A formal document in which a party states claims or defenses." },
+
+    { term: "Summons", definition: "A document notifying a person that a lawsuit has been filed against them." },
+
+    { term: "Motion", definition: "A formal request asking a court to make a ruling or take an action." },
+
+    { term: "Motion to Dismiss", definition: "A request asking the court to dismiss a case or claim." },
+
+    { term: "Summary Judgment", definition: "A ruling that resolves a case or issue when there is no genuine dispute about material facts." },
+
+    { term: "Discovery", definition: "The process of exchanging information and evidence before trial." },
+
+    { term: "Interrogatory", definition: "A written question that one party sends to another during discovery." },
+
+    { term: "Request for Production", definition: "A discovery request asking another party to provide documents or other materials." },
+
+    { term: "Privilege", definition: "A legal protection that allows certain communications or information to remain confidential." },
+
+    { term: "Attorney-Client Privilege", definition: "Protection for confidential communications between an attorney and client made for legal advice." },
+
+    { term: "Work Product", definition: "Materials prepared by an attorney or legal team in anticipation of litigation." },
+
+    { term: "Exhibit", definition: "A document, object, or other item formally introduced as evidence." },
+
+    { term: "Evidence", definition: "Information or material presented to help prove or disprove a fact." },
+
+    { term: "Hearsay", definition: "An out-of-court statement offered to prove the truth of what it says." },
+
+    { term: "Relevance", definition: "The connection between evidence and a fact that matters to the case." },
+
+    { term: "Objection", definition: "A formal protest that a question, statement, or piece of evidence is improper." },
+
+    { term: "Overruled", definition: "A judge's decision rejecting an objection." },
+
+    { term: "Sustained", definition: "A judge's decision agreeing with an objection." },
+
+    { term: "Testimony", definition: "Evidence given by a witness under oath." },
+
+    { term: "Witness", definition: "A person who provides evidence about facts relevant to a case." },
+
+    { term: "Expert Witness", definition: "A witness qualified to give an opinion based on specialized knowledge or experience." },
+
+    { term: "Credibility", definition: "The quality of being believable or trustworthy as a witness or source." },
+
+    { term: "Voir Dire", definition: "The process of questioning potential jurors or examining a prospective witness's qualifications." },
+
+    { term: "Verdict", definition: "The decision reached by a jury or, in some cases, a judge." },
+
+    { term: "Judgment", definition: "The court's formal decision resolving a case or particular issue." },
+
+    { term: "Order", definition: "A command or decision issued by a court." },
+
+    { term: "Appeal", definition: "A request for a higher court to review a lower court's decision." },
+
+    { term: "Appellant", definition: "The party who asks a higher court to review a decision." },
+
+    { term: "Appellee", definition: "The party responding to an appeal." },
+
+    { term: "Remand", definition: "To send a case back to a lower court for further proceedings." },
+
+    { term: "Precedent", definition: "A prior court decision that may guide later cases." },
+
+    { term: "Stare Decisis", definition: "The principle that courts generally follow established legal precedents." },
+
+    { term: "Res Judicata", definition: "The principle that a matter already finally decided generally cannot be litigated again." },
+
+    { term: "Res Ipsa Loquitur", definition: "A doctrine allowing negligence to be inferred from the nature of an event under certain circumstances." },
+
+    { term: "Prima Facie", definition: "Sufficient at first appearance to support a claim or establish a fact unless rebutted." },
+
+    { term: "Bona Fide", definition: "Made in good faith and without fraud or deceit." },
+
+    { term: "Pro Se", definition: "Representing oneself in a legal proceeding without an attorney." },
+
+    { term: "Pro Bono", definition: "Legal work performed without charging the client a fee." },
+
+    { term: "In Camera", definition: "A proceeding or discussion conducted privately in the judge's chambers or outside public view." },
+
+    { term: "Ex Parte", definition: "A proceeding or communication involving only one side of a legal matter." },
+
+    { term: "Sua Sponte", definition: "An action taken by a court on its own initiative rather than at a party's request." },
+
+    { term: "Amicus Curiae", definition: "A person or organization that is not a party but provides information or argument to assist a court." },
+
+    { term: "Per Se", definition: "By itself or inherently." },
+
+    { term: "Et Al.", definition: "A Latin abbreviation meaning 'and others,' commonly used when referring to multiple people." },
+
+    { term: "Ad Litem", definition: "Appointed for the purposes of a particular legal proceeding." },
+
+    { term: "Guardian Ad Litem", definition: "A person appointed by a court to represent the interests of someone who cannot adequately represent themselves." },
+
+    { term: "Habeas Corpus", definition: "A legal proceeding used to challenge whether a person is being lawfully detained." },
+
+    { term: "Mens Rea", definition: "The mental state or intent required for certain criminal offenses." },
+
+    { term: "Actus Reus", definition: "The physical act or conduct that makes up a criminal offense." },
+
+    { term: "Corpus Delicti", definition: "The facts or circumstances establishing that a crime has occurred." },
+
+    { term: "Nolo Contendere", definition: "A plea in which a defendant does not contest the charge, without formally admitting guilt." },
+
+    { term: "Probable Cause", definition: "A reasonable basis for believing that a crime occurred or that evidence will be found." },
+
+    { term: "Reasonable Doubt", definition: "The level of uncertainty that prevents a criminal jury from being firmly convinced of guilt." },
+
+    { term: "Bail", definition: "Money or other security used to help ensure that a defendant returns to court." },
+
+    { term: "Arrest", definition: "The legal taking of a person into custody." },
+
+    { term: "Indictment", definition: "A formal criminal charge issued by a grand jury." },
+
+    { term: "Information", definition: "A formal criminal charge filed by a prosecutor without a grand jury indictment." },
+
+    { term: "Grand Jury", definition: "A group that determines whether there is sufficient basis to bring certain criminal charges." },
+
+    { term: "Preliminary Hearing", definition: "A hearing used to determine whether there is enough evidence for a criminal case to proceed." },
+
+    { term: "Sentencing", definition: "The process of imposing a punishment after a criminal conviction." },
+
+    { term: "Probation", definition: "A period of court supervision served in the community instead of, or sometimes after, incarceration." },
+
+    { term: "Parole", definition: "Conditional release from prison before the full sentence has been completed." },
+
+    { term: "Tort", definition: "A civil wrong that causes harm and may result in legal liability." },
+
+    { term: "Negligence", definition: "Failure to use the level of care that a reasonably careful person would use." },
+
+    { term: "Liability", definition: "Legal responsibility for an act, omission, debt, or injury." },
+
+    { term: "Damages", definition: "Money awarded to compensate someone for a legally recognized loss or injury." },
+
+    { term: "Compensatory Damages", definition: "Money intended to compensate a person for actual losses or harm." },
+
+    { term: "Punitive Damages", definition: "Money awarded to punish particularly wrongful conduct and deter similar conduct." },
+
+    { term: "Breach of Contract", definition: "A failure to perform a duty required by a contract." },
+
+    { term: "Indemnify", definition: "To compensate someone for a loss or protect them against certain financial liability." },
+
+    { term: "Rescission", definition: "The cancellation of a contract and, generally, restoration of the parties to their prior positions." },
+
+    { term: "Specific Performance", definition: "A court order requiring a party to perform a contractual obligation." },
+
+    { term: "Injunction", definition: "A court order requiring someone to do or stop doing a particular act." },
+
+    { term: "Restraining Order", definition: "A court order temporarily restricting a person's actions, often to prevent harm or contact." },
+
+    { term: "Contempt", definition: "Conduct that disobeys or shows disrespect for a court's authority or order." },
+
+    { term: "Sanction", definition: "A penalty imposed for violating a court rule, order, or other legal requirement." },
+
+    { term: "Mistrial", definition: "A trial ended before a verdict because a serious problem prevents it from continuing fairly." },
+
+    { term: "Acquittal", definition: "A finding that a criminal defendant is not guilty of the charged offense." },
+
+    { term: "Conviction", definition: "A formal finding that a criminal defendant is guilty of an offense." },
+
+    { term: "Default Judgment", definition: "A judgment entered when a party fails to respond or defend as required." },
+
+    { term: "Settlement", definition: "An agreement resolving a legal dispute without a trial or before the case is fully completed." },
+
+    { term: "Mediation", definition: "A process in which a neutral person helps disputing parties try to reach an agreement." },
+
+    { term: "Arbitration", definition: "A process in which a neutral person hears a dispute and makes a decision, often outside court." },
+
+    { term: "Cause of Action", definition: "The legal basis that gives a person the right to bring a lawsuit." },
+
+    { term: "Statute of Limitations", definition: "The deadline for bringing a particular type of legal claim." },
+
+    { term: "Burden of Proof", definition: "The responsibility of proving the facts required to establish a claim or defense." },
+
+    { term: "Preponderance of the Evidence", definition: "A standard requiring proof that something is more likely true than not true." },
+
+    { term: "Aggravating Circumstance", definition: "A fact that may justify increasing the seriousness of a punishment or liability." },
+
+    { term: "Affirmative Defense", definition: "A defense in which a defendant raises additional facts that may defeat or reduce the plaintiff's or prosecution's claim." }
+
+];
+
+function getMonday(date) {
+    const result = new Date(date);
+    result.setHours(0, 0, 0, 0);
+
+    const day = result.getDay();
+    const difference = day === 0 ? -6 : 1 - day;
+
+    result.setDate(result.getDate() + difference);
+
+    return result;
+}
+
+function displayLegalTerm() {
+    const container = document.getElementById("legalTerm");
+
+    const today = new Date();
+    const monday = getMonday(today);
+
+    const firstMonday = new Date(2026, 8, 7);
+    firstMonday.setHours(0, 0, 0, 0);
+
+    const millisecondsPerWeek =
+        1000 * 60 * 60 * 24 * 7;
+
+    const weekNumber = Math.floor(
+        (monday - firstMonday) / millisecondsPerWeek
+    );
+
+    const index =
+        ((weekNumber % legalTerms.length) + legalTerms.length)
+        % legalTerms.length;
+
+    const entry = legalTerms[index];
+
+    container.innerHTML = `
+        <div class="legal-term">${entry.term}</div>
+        <p class="legal-definition">${entry.definition}</p>
+    `;
+}
+
+
+/* =========================
+   ON THIS DAY
+========================= */
+
+async function displayOnThisDay() {
+    const container = document.getElementById("onThisDay");
+
+    const today = new Date();
+
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    const url =
+        `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${month}/${day}`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.events || !data.events.length) {
+            container.innerHTML = `
+                <p class="daily-message">
+                    No historical events found for today.
+                </p>
+            `;
+            return;
+        }
+
+        const events = data.events.slice(0, 8);
+
+        let html = "";
+
+        events.forEach(event => {
+            html += `
+                <div class="history-event">
+                    <div class="history-date">${event.year}</div>
+                    <div class="history-sentence">${event.text}</div>
+                </div>
+            `;
+        });
+
+        html += `
+            <div class="history-link">
+                <a href="https://en.wikipedia.org/wiki/Wikipedia:On_this_day"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    More On This Day
+                </a>
+            </div>
+        `;
+
+        container.innerHTML = html;
+
+    } catch (error) {
+
+        container.innerHTML = `
+            <p class="daily-message">
+                Unable to load today's historical events.
+            </p>
+        `;
+
+        console.error("On This Day error:", error);
+    }
+}
+
+
+/* =========================
+   START EVERYTHING
+========================= */
+
+displayTodayDate();
+displayDailyVideo();
+displayRotatingDrill();
+displayLegalTerm();
+displayOnThisDay();
+
+</script>
+
+</body>
+</html>
 ```
