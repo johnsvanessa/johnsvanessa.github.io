@@ -118,24 +118,24 @@
         .legal-term {
             font-size: 25px;
             font-weight: bold;
-            margin: 12px 0;
+            margin: 12px 0 10px;
         }
 
         .legal-definition {
-            line-height: 1.6;
-            margin-bottom: 10px;
+            line-height: 1.5;
+            margin: 0;
         }
 
         .legal-week {
             font-size: 14px;
             color: #777;
-            margin-top: 12px;
+            margin-top: 14px;
         }
 
         .legal-source {
             font-size: 12px;
             color: #888;
-            margin-top: 12px;
+            margin-top: 8px;
         }
 
         .legal-source a {
@@ -174,10 +174,14 @@
             font-weight: bold;
         }
 
-        /* Student Materials */
+        /* BMAC */
 
-        .student-materials p {
-            line-height: 1.6;
+        .bmac {
+            margin-top: 20px;
+        }
+
+        .bmac img {
+            display: block;
         }
 
         /* Mobile */
@@ -263,24 +267,18 @@
             </div>
 
 
-            <!-- STUDENT MATERIALS -->
+            <!-- BMAC BUTTON -->
 
-            <div class="tile student-materials">
-                <h2>Student Materials</h2>
+            <div class="bmac">
 
-                <p>
-                    Guided theory review, practice materials, drills, and
-                    other resources for court reporting students.
-                </p>
-
-                <a
-                    class="button"
-                    href="https://buymeacoffee.com/vanessacr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    View Student Materials
+                <a href="https://www.buymeacoffee.com/vanessacr" target="_blank">
+                    <img
+                        src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png"
+                        alt="Buy Me a Coffee"
+                        style="height: 60px !important;width: 217px !important;"
+                    >
                 </a>
+
             </div>
 
         </div>
@@ -293,9 +291,11 @@
             <h2>On This Day</h2>
 
             <div id="onThisDay">
+
                 <p class="daily-message">
                     Loading today's historical events...
                 </p>
+
             </div>
 
         </div>
@@ -321,7 +321,8 @@
             year: "numeric"
         });
 
-        document.getElementById("todayDate").textContent = formattedDate;
+        document.getElementById("todayDate").textContent =
+            formattedDate;
     }
 
 
@@ -401,7 +402,7 @@
        September 11, 2026 = Letter
        September 12, 2026 = Number
 
-       Then repeats continuously.
+       Then repeats.
        ========================================================= */
 
     const rotatingDrills = {
@@ -424,7 +425,8 @@
 
         const today = new Date();
 
-        const startDate = new Date(2026, 8, 10);
+        const startDate =
+            new Date(2026, 8, 10);
 
         startDate.setHours(0, 0, 0, 0);
 
@@ -484,188 +486,297 @@
     /* =========================================================
        LEGAL TERM OF THE WEEK
 
-       The term changes every Monday.
-
-       The current week is determined by the Monday date.
-
-       We use Showalter's Law Dictionary as the source.
-       The dictionary is organized into A.md, B.md, C.md, etc.
-
-       Each week:
-       1. Determine the current Monday.
-       2. Choose a letter based on the week number.
-       3. Load that letter's dictionary file.
-       4. Choose one entry from that file.
-       5. Display that same entry all week.
+       Source:
+       Showalter's Law Dictionary
 
        The dictionary is CC0/public domain.
+
+       The page chooses ONE entry every Monday and
+       keeps that same entry for the entire week.
+
+       September 7, 2026 is the starting Monday.
        ========================================================= */
 
 
-    const lawDictionaryBase =
+    const dictionaryBase =
         "https://raw.githubusercontent.com/michaeljshowalter/showalters-law-dictionary/main/";
+
+
+    const dictionaryLetters =
+        "ABCDEFGHIJKLMNOPQRSTUVWYZ";
 
 
     function getMonday(date) {
 
-        const result = new Date(date);
+        const result =
+            new Date(date);
 
         result.setHours(0, 0, 0, 0);
 
-        const day = result.getDay();
+        const day =
+            result.getDay();
+
 
         const difference =
-            day === 0 ? -6 : 1 - day;
+            day === 0
+                ? -6
+                : 1 - day;
+
 
         result.setDate(
             result.getDate() + difference
         );
 
+
         return result;
     }
 
 
-    function getWeekNumber(startDate, currentMonday) {
+    function getWeekNumber(monday) {
+
+        const firstMonday =
+            new Date(2026, 8, 7);
+
+        firstMonday.setHours(0, 0, 0, 0);
+
 
         const millisecondsPerWeek =
             1000 * 60 * 60 * 24 * 7;
 
+
         return Math.floor(
-            (currentMonday - startDate) /
+            (monday - firstMonday) /
             millisecondsPerWeek
         );
     }
 
 
-    function formatWeekDates(monday) {
+    function formatWeek(monday) {
 
-        const sunday = new Date(monday);
+        const sunday =
+            new Date(monday);
 
         sunday.setDate(
             sunday.getDate() + 6
         );
 
 
-        const start = monday.toLocaleDateString(
-            "en-US",
-            {
-                month: "short",
-                day: "numeric"
-            }
-        );
+        const start =
+            monday.toLocaleDateString(
+                "en-US",
+                {
+                    month: "short",
+                    day: "numeric"
+                }
+            );
 
 
-        const end = sunday.toLocaleDateString(
-            "en-US",
-            {
-                month: "short",
-                day: "numeric"
-            }
-        );
+        const end =
+            sunday.toLocaleDateString(
+                "en-US",
+                {
+                    month: "short",
+                    day: "numeric"
+                }
+            );
 
 
         return `${start}–${end}`;
     }
 
 
-    function parseDictionaryEntries(markdown) {
+    function cleanDefinition(text) {
 
-        const matches = [
-            ...markdown.matchAll(
-                /^## (.+)$/gm
+        /*
+            Remove the status line.
+        */
+
+        text =
+            text.replace(
+                /^_Status:[^\n]*\n?/i,
+                ""
+            );
+
+
+        /*
+            Remove NOTE material.
+        */
+
+        const noteIndex =
+            text.indexOf("[NOTE:");
+
+        if (noteIndex !== -1) {
+
+            text =
+                text.substring(
+                    0,
+                    noteIndex
+                );
+        }
+
+
+        /*
+            Remove "See also" material.
+        */
+
+        const seeAlsoIndex =
+            text.indexOf("See also");
+
+        if (seeAlsoIndex !== -1) {
+
+            text =
+                text.substring(
+                    0,
+                    seeAlsoIndex
+                );
+        }
+
+
+        /*
+            Remove Markdown formatting.
+        */
+
+        text =
+            text.replace(
+                /\*\*/g,
+                ""
+            );
+
+        text =
+            text.replace(
+                /_/g,
+                ""
+            );
+
+
+        /*
+            Collapse whitespace.
+        */
+
+        text =
+            text.replace(
+                /\s+/g,
+                " "
             )
-        ];
+            .trim();
 
+
+        /*
+            Remove quotation marks at the beginning/end.
+        */
+
+        text =
+            text.replace(
+                /^["“]+/,
+                ""
+            );
+
+        text =
+            text.replace(
+                /["”]+$/,
+                ""
+            );
+
+
+        /*
+            Find the first complete sentence.
+
+            This keeps the display much shorter than
+            the full dictionary entry.
+        */
+
+        const sentenceMatch =
+            text.match(
+                /^(.{20,300}?[.!?])(?:\s|$)/
+            );
+
+
+        if (sentenceMatch) {
+
+            text =
+                sentenceMatch[1];
+        }
+
+
+        /*
+            If the first sentence is still too long,
+            shorten it at a word boundary.
+        */
+
+        if (text.length > 240) {
+
+            text =
+                text.substring(
+                    0,
+                    237
+                ).replace(
+                    /\s+\S*$/,
+                    ""
+                ) + "...";
+        }
+
+
+        return text;
+    }
+
+
+    function parseDictionary(markdown) {
 
         const entries = [];
 
+        const headingPattern =
+            /^## (.+)$/gm;
 
-        for (let i = 0; i < matches.length; i++) {
+
+        const headings =
+            [...markdown.matchAll(
+                headingPattern
+            )];
+
+
+        for (
+            let i = 0;
+            i < headings.length;
+            i++
+        ) {
 
             const term =
-                matches[i][1].trim();
+                headings[i][1].trim();
 
 
             const start =
-                matches[i].index +
-                matches[i][0].length;
+                headings[i].index +
+                headings[i][0].length;
 
 
             const end =
-                i + 1 < matches.length
-                    ? matches[i + 1].index
+                i + 1 < headings.length
+                    ? headings[i + 1].index
                     : markdown.length;
 
 
-            let section =
+            let definition =
                 markdown.substring(
                     start,
                     end
                 ).trim();
 
 
-            /*
-                Remove the status line.
-            */
-
-            section =
-                section.replace(
-                    /^_Status:[^\n]*\n?/i,
-                    ""
-                ).trim();
+            definition =
+                cleanDefinition(
+                    definition
+                );
 
 
-            /*
-                Remove horizontal rules.
-            */
-
-            section =
-                section.replace(
-                    /^---\s*/gm,
-                    ""
-                ).trim();
-
-
-            /*
-                Remove [NOTE: ...] material when present.
-                This leaves the primary definition/explanation.
-            */
-
-            const noteIndex =
-                section.indexOf("[NOTE:");
-
-            if (noteIndex !== -1) {
-
-                section =
-                    section.substring(
-                        0,
-                        noteIndex
-                    ).trim();
-            }
-
-
-            /*
-                Remove trailing "See also" material.
-            */
-
-            const seeAlsoIndex =
-                section.indexOf("See also");
-
-            if (seeAlsoIndex !== -1) {
-
-                section =
-                    section.substring(
-                        0,
-                        seeAlsoIndex
-                    ).trim();
-            }
-
-
-            if (term && section) {
+            if (
+                term &&
+                definition &&
+                !term.startsWith("See ")
+            ) {
 
                 entries.push({
                     term: term,
-                    definition: section
+                    definition: definition
                 });
             }
         }
@@ -681,54 +792,39 @@
             document.getElementById("legalTerm");
 
 
-        const today = new Date();
+        const today =
+            new Date();
+
 
         const monday =
             getMonday(today);
 
 
-        /*
-            September 7, 2026 is our first Monday.
-
-            Starting with this Monday makes the rotation
-            predictable and easy to understand.
-        */
-
-        const firstMonday =
-            new Date(2026, 8, 7);
-
-        firstMonday.setHours(0, 0, 0, 0);
-
-
         const weekNumber =
-            getWeekNumber(
-                firstMonday,
-                monday
-            );
+            getWeekNumber(monday);
 
 
         /*
-            There are 26 letter files.
+            Cycle through the available letters.
+
+            There is no X file with entries, so X is
+            skipped.
         */
 
         const letters =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-
-        /*
-            Rotate through the alphabet.
-        */
-
-        const letterIndex =
-            ((weekNumber % 26) + 26) % 26;
+            "ABCDEFGHIJKLMNOPQRSTUVWYZ";
 
 
         const letter =
-            letters[letterIndex];
+            letters[
+                ((weekNumber % letters.length)
+                + letters.length)
+                % letters.length
+            ];
 
 
         const url =
-            lawDictionaryBase +
+            dictionaryBase +
             letter +
             ".md";
 
@@ -752,7 +848,7 @@
 
 
             const entries =
-                parseDictionaryEntries(
+                parseDictionary(
                     markdown
                 );
 
@@ -760,30 +856,31 @@
             if (!entries.length) {
 
                 throw new Error(
-                    "No dictionary entries found."
+                    "No legal terms found."
                 );
             }
 
 
             /*
-                Pick a deterministic entry based on
-                the week number.
+                Use the Monday's week number to
+                deterministically select one entry.
 
-                This means the same Monday always
-                produces the same term.
+                The same week will therefore always
+                show the same term.
             */
 
             const entryIndex =
-                ((weekNumber * 7) %
-                entries.length);
+                (
+                    weekNumber * 7
+                ) % entries.length;
 
 
             const entry =
                 entries[entryIndex];
 
 
-            const weekDates =
-                formatWeekDates(monday);
+            const week =
+                formatWeek(monday);
 
 
             container.innerHTML = `
@@ -792,12 +889,12 @@
                     ${entry.term}
                 </div>
 
-                <div class="legal-definition">
+                <p class="legal-definition">
                     ${entry.definition}
-                </div>
+                </p>
 
                 <div class="legal-week">
-                    ${weekDates}
+                    ${week}
                 </div>
 
                 <div class="legal-source">
@@ -815,6 +912,12 @@
 
         } catch (error) {
 
+            console.error(
+                "Legal dictionary error:",
+                error
+            );
+
+
             container.innerHTML = `
 
                 <p class="daily-message">
@@ -822,11 +925,6 @@
                 </p>
 
             `;
-
-            console.error(
-                "Legal dictionary error:",
-                error
-            );
         }
     }
 
@@ -844,7 +942,8 @@
             document.getElementById("onThisDay");
 
 
-        const today = new Date();
+        const today =
+            new Date();
 
 
         const month =
