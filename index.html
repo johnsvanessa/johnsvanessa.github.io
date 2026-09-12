@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Daily Drills</title>
+
+<style>
+
+/* =========================================================
+   BASIC PAGE
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    max-width: 1100px;
+    margin: 0 auto 24px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#todayDate {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
+.main-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+
+    display: grid;
+
+    /*
+       Left side contains the two drill tiles.
+       Right side contains On This Day.
+    */
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   LEFT COLUMN
+   ========================================================= */
+
+.left-column {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 16px;
+}
+
+
+/* =========================================================
+   TILES
+   ========================================================= */
+
+.tile {
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.08);
+}
+
+.tile h2 {
+    margin: 0 0 14px;
+
+    font-size: 21px;
+}
+
+
+/* =========================================================
+   DAILY CONTENT
+   ========================================================= */
+
+.daily-content {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 8px;
+}
+
+.daily-label {
+    font-size: 16px;
+    font-weight: bold;
+
+    margin-bottom: 4px;
+}
+
+.daily-message {
+    margin: 0;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.external-button {
+    display: inline-block;
+
+    text-decoration: none;
+
+    text-align: center;
+
+    border-radius: 7px;
+
+    padding: 10px 16px;
+
+    font-size: 15px;
+
+    background: #333;
+
+    color: white;
+
+    transition: background 0.15s ease;
+}
+
+.external-button:hover {
+    background: #555;
+}
+
+
+/* =========================================================
+   ON THIS DAY
+   ========================================================= */
+
+.on-this-day-content {
+    font-size: 15px;
+
+    line-height: 1.5;
+}
+
+.history-event {
+    margin-bottom: 14px;
+}
+
+.history-date {
+    font-weight: bold;
+
+    margin-bottom: 2px;
+}
+
+.history-sentence {
+    margin-top: 0;
+}
+
+.history-link {
+    margin-top: 18px;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 16px;
+    }
+
+    .page-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 4px;
+
+        margin-bottom: 18px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+    }
+
+    #todayDate {
+        font-size: 16px;
+    }
+
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+     ===================================================== -->
+
+<div class="page-header">
+
+    <h1>Daily Drills</h1>
+
+    <div id="todayDate"></div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+     ===================================================== -->
+
+<div class="main-grid">
+
+
+    <!-- =================================================
+         LEFT COLUMN
+         ================================================= -->
+
+    <div class="left-column">
+
+
+        <!-- =============================================
+             DAILY VIDEO
+             ============================================= -->
+
+        <section class="tile">
+
+            <h2>Daily Video</h2>
+
+            <div id="dailyVideo"
+                 class="daily-content">
+
+                Loading...
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =============================================
+             3-DRILL ROTATION
+             ============================================= -->
+
+        <section class="tile">
+
+            <h2>3-Drill Rotation</h2>
+
+            <div id="rotatingDrill"
+                 class="daily-content">
+
+                Loading...
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         RIGHT COLUMN — ON THIS DAY
+         ================================================= -->
+
+    <section class="tile">
+
+        <h2>On This Day</h2>
+
+        <div id="onThisDay"
+             class="on-this-day-content">
+
+            Loading...
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   TODAY'S DATE
+   ========================================================= */
+
+function displayTodayDate() {
+
+    const today = new Date();
+
+    const formattedDate =
+        today.toLocaleDateString("en-US", {
+
+            month: "long",
+
+            day: "numeric",
+
+            year: "numeric"
+
+        });
+
+    document.getElementById("todayDate")
+        .textContent = formattedDate;
+
+}
+
+
+
+/* =========================================================
+   DAILY VIDEOS
+   =========================================================
+
+   Monday-Friday only.
+
+   Saturday and Sunday display a message instead.
+   ========================================================= */
+
+const dailyVideos = {
+
+    Monday:
+        "https://www.youtube.com/watch?v=E7F8B352_sk",
+
+    Tuesday:
+        "https://www.youtube.com/watch?v=aMn53B1KtFk",
+
+    Wednesday:
+        "https://www.youtube.com/watch?v=kmdA-WqLn34",
+
+    Thursday:
+        "https://www.youtube.com/watch?v=_Rga7Hs8QjA",
+
+    Friday:
+        "https://www.youtube.com/watch?v=nO--0GOjSZ8"
+
+};
+
+
+
+function displayDailyVideo() {
+
+    const container =
+        document.getElementById("dailyVideo");
+
+    const today = new Date();
+
+    const dayName =
+        today.toLocaleDateString(
+            "en-US",
+            {
+                weekday: "long"
+            }
+        );
+
+
+    if (dailyVideos[dayName]) {
+
+        container.innerHTML = `
+
+            <div class="daily-label">
+                ${dayName}
+            </div>
+
+            <a
+                class="external-button"
+                href="${dailyVideos[dayName]}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Open Daily Video
+            </a>
+
+        `;
+
+    } else {
+
+        container.innerHTML = `
+
+            <div class="daily-label">
+                ${dayName}
+            </div>
+
+            <p class="daily-message">
+                No daily video on Saturday or Sunday.
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   3-DRILL ROTATION
+   =========================================================
+
+   Rotation begins:
+
+   September 10, 2026 = Alphabet
+   September 11, 2026 = Letter
+   September 12, 2026 = Number
+
+   Then repeats:
+
+   Alphabet
+   Letter
+   Number
+   Alphabet
+   Letter
+   Number
+   etc.
+   ========================================================= */
+
+const rotatingDrills = {
+
+    Alphabet:
+        "https://www.youtube.com/watch?v=t7F9mzdxCis",
+
+    Letter:
+        "https://www.youtube.com/watch?v=agc2LbxKa9U",
+
+    Number:
+        "https://www.youtube.com/watch?v=RJAKSweYwHM"
+
+};
+
+
+
+function displayRotatingDrill() {
+
+    const container =
+        document.getElementById("rotatingDrill");
+
+
+    const today = new Date();
+
+
+    /* Starting date of the rotation */
+
+    const startDate =
+        new Date(2026, 8, 10);
+
+
+    const millisecondsPerDay =
+        1000 * 60 * 60 * 24;
+
+
+    /* Remove the time portion from today's date */
+
+    const todayStart =
+        new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate()
+        );
+
+
+    const startDateStart =
+        new Date(
+            startDate.getFullYear(),
+            startDate.getMonth(),
+            startDate.getDate()
+        );
+
+
+    /* Number of days since September 10 */
+
+    const daysSinceStart =
+        Math.floor(
+            (todayStart - startDateStart)
+            / millisecondsPerDay
+        );
+
+
+    const drillNames = [
+
+        "Alphabet",
+
+        "Letter",
+
+        "Number"
+
+    ];
+
+
+    /*
+       % 3 creates the repeating
+       three-day rotation.
+    */
+
+    const index =
+        ((daysSinceStart % 3) + 3) % 3;
+
+
+    const drillName =
+        drillNames[index];
+
+
+    const drillUrl =
+        rotatingDrills[drillName];
+
+
+    container.innerHTML = `
+
+        <div class="daily-label">
+            Today's drill: ${drillName}
+        </div>
+
+        <a
+            class="external-button"
+            href="${drillUrl}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Open ${drillName} Drill
+        </a>
+
+    `;
+
+}
+
+
+
+/* =========================================================
+   ON THIS DAY
+   =========================================================
+
+   Uses Wikimedia's public On This Day feed.
+
+   Only historical EVENTS are displayed.
+
+   No photographs or other images.
+   ========================================================= */
+
+async function displayOnThisDay() {
+
+    const container =
+        document.getElementById("onThisDay");
+
+
+    const today = new Date();
+
+
+    const month =
+        String(today.getMonth() + 1)
+            .padStart(2, "0");
+
+
+    const day =
+        String(today.getDate())
+            .padStart(2, "0");
+
+
+    const url =
+        `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/${month}/${day}`;
+
+
+    try {
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Request failed: ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.events ||
+            !data.events.length
+        ) {
+
+            container.innerHTML = `
+
+                <p class="daily-message">
+                    No historical events found for today.
+                </p>
+
+            `;
+
+            return;
+
+        }
+
+
+        /*
+           Show the first eight historical events.
+        */
+
+        const events =
+            data.events.slice(0, 8);
+
+
+        let html = "";
+
+
+        events.forEach(event => {
+
+            html += `
+
+                <div class="history-event">
+
+                    <div class="history-date">
+                        ${event.year}
+                    </div>
+
+                    <div class="history-sentence">
+                        ${event.text}
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        html += `
+
+            <div class="history-link">
+
+                <a
+                    href="https://en.wikipedia.org/wiki/Wikipedia:On_this_day"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    More On This Day
+                </a>
+
+            </div>
+
+        `;
+
+
+        container.innerHTML = html;
+
+
+    } catch (error) {
+
+        container.innerHTML = `
+
+            <p class="daily-message">
+                Unable to load today's historical events.
+            </p>
+
+        `;
+
+
+        console.error(
+            "On This Day error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   START PAGE
+   ========================================================= */
+
+displayTodayDate();
+
+displayDailyVideo();
+
+displayRotatingDrill();
+
+displayOnThisDay();
+
+</script>
+
+
+</body>
+</html>
