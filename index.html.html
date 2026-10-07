@@ -1,0 +1,114 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Drills Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff5ee;color:#19455E;font-family:"Trebuchet MS",Arial,sans-serif}.w{max-width:1180px;margin:auto;padding:22px 28px 38px}.head{display:flex;align-items:center;gap:18px;margin-bottom:18px;padding:0 6px}.brand{font-size:40px;font-weight:700;letter-spacing:-1.8px}.tag{border-left:1px solid #aac;padding-left:18px}.card{border-radius:22px;padding:20px 22px;margin:16px 0;box-shadow:0 18px 45px rgba(30,71,110,.10);border:1px solid rgba(255,255,255,.85)}.video{background:#fffdf8;display:grid;grid-template-columns:.72fr 1.65fr;gap:18px;align-items:center}.vf{background:#f1eee9;border-radius:18px;aspect-ratio:16/9;display:grid;place-items:center;color:white;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(16,42,86,.18)}.exp{position:absolute;right:12px;top:12px;border:0;border-radius:10px;padding:8px 11px;background:rgba(16,42,86,.82);color:white;font-family:inherit;font-weight:400;cursor:pointer;z-index:2}.acc{background:#fffdf8}.tabs{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}.tab{border:2px solid transparent;border-radius:20px;padding:12px 19px;background:#e4f3ff;color:#19455E;font-weight:400;cursor:pointer;box-shadow:0 7px 18px rgba(16,42,86,.07);transition:.18s transform,.18s box-shadow;font-size:16px}.tab:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(16,42,86,.11)}.tab.active{border-color:#1688df;background:#b9e6ff;box-shadow:0 8px 20px rgba(22,136,223,.16)}.sub .tab{padding:8px 13px;border-radius:12px;font-size:14px;box-shadow:none}.runner{margin-top:12px;background:#ffffff;border-radius:18px;padding:16px;display:grid;grid-template-columns:230px 1fr;gap:18px;border:1px solid #cbeaff}label{display:block;font-weight:700;margin:10px 0 6px}select{width:100%;padding:14px 15px;border:1px solid #b9cee0;border-radius:13px;font-size:16px;background:#fff;color:#19455E;box-shadow:0 4px 12px rgba(16,42,86,.05)}.start{width:100%;margin-top:20px;padding:15px;border:0;border-radius:14px;background:#5E69FF;color:white;font-size:16px;font-weight:400;box-shadow:0 9px 20px rgba(22,136,223,.25);cursor:pointer}.display{min-height:270px;background:#ffffff;border:2px solid #bde3fb;border-radius:22px;display:flex;align-items:center;justify-content:center;position:relative;text-align:center;box-shadow:inset 0 0 0 8px rgba(232,247,255,.55),0 8px 20px rgba(16,42,86,.06)}.blink{position:absolute;top:20px;background:#FFD747;border-radius:999px;padding:9px 22px;font-weight:700;font-size:14px}.item{font-family:"Courier New",Courier,monospace;font-size:92px;font-weight:400;letter-spacing:1px}.item.vowel{font-family:"Courier New",Courier,monospace;font-size:62px;font-weight:400}.bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}.legal{background:#ffffff}.history{background:#ffffff}.ph{margin-top:18px;background:#ffffffcc;border-radius:16px;padding:22px}.progressRow{display:flex;align-items:center;gap:12px;margin-top:14px}.progressTrack{height:12px;background:#e2e5e8;border-radius:999px;overflow:hidden;flex:1}.progressFill{height:100%;width:0;background:#5E69FF;border-radius:999px;transition:width .2s linear}.timeLeft{font-weight:800;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}@media(max-width:760px){.video,.runner,.bottom{grid-template-columns:1fr}.tag{display:none}}
+</style></head><body><div class="w"><div class="head"><div style="font-size:46px">☀️</div><div class="brand">Drills Dashboard</div><div id="todayDate" class="todayDate"></div></div>
+<section class="card video"><div><h1 style="font-size:30px;letter-spacing:-.4px">🎬 Daily Video</h1></div><div class="vf">Today's assigned video<button class="exp" onclick="this.parentElement.requestFullscreen()">⛶ Expand</button></div></section>
+<section class="card acc"><h1 style="font-size:30px;letter-spacing:-.4px">🎯 Accuracy Drills</h1>
+<div class="tabs"><button class="tab active" data-main="letters" style="background:#5E69FF;color:white">Letters</button><button class="tab" data-main="numbers" style="background:#AA2377;color:white">Numbers</button><button class="tab" data-main="mixed" style="background:#F87C47;color:#19455E">Letters + Numbers</button></div>
+<div class="tabs sub" id="subs"><button class="tab active" data-sub="alphabet">Alphabet</button><button class="tab" data-sub="consonants">Initial + Final Consonants</button><button class="tab" data-sub="vowels">Consonants + Vowel Sounds</button></div>
+<div id="alphaNote" style="margin-top:14px;font-weight:700">Finger spelling practice, initial side only</div><div class="tabs sub" id="numberSubs" style="display:none"><button class="tab active" data-numbermode="cardinal">0–100</button><button class="tab" data-numbermode="ordinal">Ordinals</button></div><div class="runner"><div><label>Speed (items/minute)</label><select id="speed"><option>20</option><option>40</option><option>60</option><option>80</option><option selected>100</option><option>120</option><option>140</option><option>160</option><option>180</option><option>200</option><option>220</option><option>240</option></select><label>Time</label><select id="mins"><option value="1">1 minute</option><option value="2" selected>2 minutes</option><option value="3">3 minutes</option><option value="4">4 minutes</option><option value="5">5 minutes</option></select><button class="start" id="start">▶ Start</button></div><div><div class="display"><div class="blink" id="blink">Don't forget to blink!</div><div class="item" id="item">A</div></div><div class="progressRow"><div class="progressTrack"><div class="progressFill" id="progressFill"></div></div><div class="timeLeft" id="timeLeft">2:00</div></div></div></div></section>
+<div class="bottom"><section class="card legal"><h2>📖 Legal Term of the Week</h2></section><section class="card history"><h2>📅 On This Day</h2></section></div></div>
+<script>
+const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),I=["B-","D-","F-","G-","H-","J-","K-","L-","M-","N-","P-","Q-","R-","S-","T-","V-","W-","X-","Y-","Z-"],F=["-B","-D","-F","-G","-J","-K","-L","-M","-N","-P","-Q","-R","-S","-T","-V","-X","-Z"],V=["long A","short A","long E","short E","long I","short I","long O","short O","long U","short U","AO (too)","OU (how)","AU (saw)","OI (boy)"],N=Array.from({length:101},(_,i)=>""+i);let main="letters",sub="alphabet",numberMode="cardinal",timer,end,last="",paused=false,remaining=0,runStarted=0,runTotal=0,intervalMs=0,progressTimer=null;const item=document.getElementById("item"),blink=document.getElementById("blink"),subs=document.getElementById("subs");function ordinal(n){const j=n%10,k=n%100;let suf=(j===1&&k!==11)?"st":(j===2&&k!==12)?"nd":(j===3&&k!==13)?"rd":"th";return n+suf}
+function pool(){if(main==="numbers")return numberMode==="ordinal"?N.map(x=>ordinal(+x)):N;if(main==="mixed")return [...A,...I,...F,...V,...N];if(sub==="alphabet")return A;if(sub==="consonants")return [...I,...F];return [...I,...F,...V]}function next(){let p=pool(),n=p[Math.floor(Math.random()*p.length)];while(p.length>1&&n===last)n=p[Math.floor(Math.random()*p.length)];last=n;item.textContent=n;item.classList.toggle("vowel",V.includes(n))}document.querySelectorAll("[data-main]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-main]").forEach(x=>x.classList.remove("active"));b.classList.add("active");main=b.dataset.main;subs.style.display=main==="letters"?"flex":"none";document.getElementById("numberSubs").style.display=main==="numbers"?"flex":"none";document.getElementById("alphaNote").style.display=(main==="letters"&&sub==="alphabet")?"block":"none";resetDrill()});document.querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-sub]").forEach(x=>x.classList.remove("active"));b.classList.add("active");sub=b.dataset.sub;document.getElementById("alphaNote").style.display=sub==="alphabet"?"block":"none";resetDrill()});document.querySelectorAll("[data-numbermode]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-numbermode]").forEach(x=>x.classList.remove("active"));b.classList.add("active");numberMode=b.dataset.numbermode;resetDrill()});
+
+document.getElementById("mins").onchange=()=>{document.getElementById("timeLeft").textContent=document.getElementById("mins").value+":00"};
+const startBtn=document.getElementById("start"), displayBox=document.querySelector(".display");
+function setStartColor(){
+ const colors={letters:"#5E69FF",numbers:"#AA2377",mixed:"#F87C47"};
+ startBtn.style.background=colors[main];
+}
+function resetDrill(){
+ clearInterval(timer);clearInterval(progressTimer);
+ paused=false;remaining=0;
+ startBtn.textContent="▶ Start";setStartColor();
+ displayBox.classList.remove("messageMode");
+ blink.style.display="none";
+ document.getElementById("progressFill").style.width="0%";
+ document.getElementById("timeLeft").textContent=document.getElementById("mins").value+":00";
+ next();
+}
+
+function updateProgress(){
+ const elapsed=runTotal-remaining;
+ document.getElementById("progressFill").style.width=Math.min(100,elapsed/runTotal*100)+"%";
+ const sec=Math.ceil(remaining/1000);
+ document.getElementById("timeLeft").textContent=Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0");
+}
+function finishRun(){
+ clearInterval(timer);clearInterval(progressTimer);paused=false;remaining=0;
+ document.getElementById("progressFill").style.width="100%";document.getElementById("timeLeft").textContent="0:00";
+ blink.style.display="none";displayBox.classList.add("messageMode");item.classList.remove("vowel");item.textContent="Now read back!";startBtn.textContent="▶ Start";
+}
+function runTimers(){
+ runStarted=Date.now();
+ timer=setInterval(next,intervalMs);
+ progressTimer=setInterval(()=>{
+   const used=Date.now()-runStarted;runStarted=Date.now();remaining=Math.max(0,remaining-used);updateProgress();
+   if(remaining<=0)finishRun();
+ },100);
+}
+startBtn.onclick=()=>{
+ if(paused){
+   paused=false;startBtn.textContent="⏸ Pause";runTimers();return;
+ }
+ if(startBtn.textContent.includes("Pause")){
+   clearInterval(timer);clearInterval(progressTimer);
+   const used=Date.now()-runStarted;remaining=Math.max(0,remaining-used);updateProgress();
+   paused=true;startBtn.textContent="▶ Resume";return;
+ }
+ clearInterval(timer);clearInterval(progressTimer);displayBox.classList.add("messageMode");
+ blink.style.display="none";item.textContent="Don't forget to blink!";
+ const sVal=+document.getElementById("speed").value,m=+document.getElementById("mins").value;
+ intervalMs=60000/sVal;runTotal=m*60000;remaining=runTotal;
+ document.getElementById("progressFill").style.width="0%";document.getElementById("timeLeft").textContent=m+":00";
+ startBtn.textContent="⏸ Pause";
+ setTimeout(()=>{displayBox.classList.remove("messageMode");next();runTimers()},1500);
+};
+document.getElementById("todayDate").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+const weekdayVideos={
+  1:"E7F8B352_sk",
+  2:"aMn53B1KtFk",
+  3:"kmdA-WqLn34",
+  4:"_Rga7Hs8QjA",
+  5:"nO--0GOjSZ8"
+};
+const weekdayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const today=new Date().getDay();
+const vf=document.querySelector(".vf");
+const videoHeading=document.querySelector(".video h1");
+if(today>=1&&today<=5){
+  vf.innerHTML='<iframe width="100%" height="100%" style="border:0;border-radius:18px" src="https://www.youtube.com/embed/'+weekdayVideos[today]+'" title="'+weekdayNames[today]+' Daily Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><button class="exp" id="popVideo" type="button">↗ Pop out</button>';document.getElementById("popVideo").onclick=()=>window.open("https://www.youtube.com/watch?v="+weekdayVideos[today],"_blank","noopener,noreferrer");
+  videoHeading.innerHTML='🎬 Daily Video';
+}
+
+const day=new Date().getDay();if(day===0||day===6){const v=document.querySelector(".video");v.style.display="block";v.style.padding="18px 26px";document.querySelector(".vf").style.display="none";}</script></body></html>
+<style>
+.display.messageMode .blink{display:none!important}
+.display.messageMode .item{font-family:"Courier New",Courier,monospace!important;font-size:48px!important;font-weight:700!important}
+@media(max-width:760px){.display.messageMode .item{font-size:34px!important;padding:20px 25px}}
+</style>
+<style>
+#subs .tab{background:#eef0ff;border-color:#c4e8fb}
+#subs .tab.active{background:#dfe2ff;border-color:#5E69FF}
+#numberSubs .tab{background:#fff0e9;border-color:#c2efd2}
+#numberSubs .tab.active{background:#ffe0d2;border-color:#F87C47}
+</style>
+<style>
+.head{justify-content:space-between}
+.todayDate{margin-left:auto;font-size:17px;font-weight:400;color:#19455E}
+</style>
+<style>
+.video{border-top:7px solid #FFD747}
+.acc{border-top:7px solid #4FA3A8}
+.legal{border-top:7px solid #5E69FF}
+.history{border-top:7px solid #AA2377}
+.runner{border:1px solid #ece6df;background:#fffaf5}
+.display{border-color:#dedfe3}
+</style>
+<style>
+.tab.active{border-color:#19455E!important;box-shadow:0 0 0 2px #19455E!important}
+#subs .tab.active,#numberSubs .tab.active{background:#19455E!important;color:white!important;border-color:#19455E!important}
+#subs .tab,#numberSubs .tab{background:#f4f1ed;border-color:#ded8d1;color:#19455E}
+</style>
+<script>setStartColor();</script>
