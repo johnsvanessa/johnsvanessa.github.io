@@ -1,32 +1,126 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Drills Dashboard</title>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="referrer" content="strict-origin-when-cross-origin"><title>Drills Dashboard</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#fff5ee;color:#19455E;font-family:"Trebuchet MS",Arial,sans-serif}.w{max-width:1180px;margin:auto;padding:22px 28px 38px}.head{display:flex;align-items:center;gap:18px;margin-bottom:18px;padding:0 6px}.brand{font-size:40px;font-weight:700;letter-spacing:-1.8px}.tag{border-left:1px solid #aac;padding-left:18px}.card{border-radius:22px;padding:20px 22px;margin:16px 0;box-shadow:0 18px 45px rgba(30,71,110,.10);border:1px solid rgba(255,255,255,.85)}.video{background:#fffdf8;display:grid;grid-template-columns:.72fr 1.65fr;gap:18px;align-items:center}.vf{background:#f1eee9;border-radius:18px;aspect-ratio:16/9;display:grid;place-items:center;color:white;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(16,42,86,.18)}.exp{position:absolute;right:12px;top:12px;border:0;border-radius:10px;padding:8px 11px;background:rgba(16,42,86,.82);color:white;font-family:inherit;font-weight:400;cursor:pointer;z-index:2}.acc{background:#fffdf8}.tabs{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px}.tab{border:2px solid transparent;border-radius:20px;padding:12px 19px;background:#e4f3ff;color:#19455E;font-weight:400;cursor:pointer;box-shadow:0 7px 18px rgba(16,42,86,.07);transition:.18s transform,.18s box-shadow;font-size:16px}.tab:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(16,42,86,.11)}.tab.active{border-color:#1688df;background:#b9e6ff;box-shadow:0 8px 20px rgba(22,136,223,.16)}.sub .tab{padding:8px 13px;border-radius:12px;font-size:14px;box-shadow:none}.runner{margin-top:12px;background:#ffffff;border-radius:18px;padding:16px;display:grid;grid-template-columns:230px 1fr;gap:18px;border:1px solid #cbeaff}label{display:block;font-weight:700;margin:10px 0 6px}select{width:100%;padding:14px 15px;border:1px solid #b9cee0;border-radius:13px;font-size:16px;background:#fff;color:#19455E;box-shadow:0 4px 12px rgba(16,42,86,.05)}.start{width:100%;margin-top:20px;padding:15px;border:0;border-radius:14px;background:#5E69FF;color:white;font-size:16px;font-weight:400;box-shadow:0 9px 20px rgba(22,136,223,.25);cursor:pointer}.display{min-height:270px;background:#ffffff;border:2px solid #bde3fb;border-radius:22px;display:flex;align-items:center;justify-content:center;position:relative;text-align:center;box-shadow:inset 0 0 0 8px rgba(232,247,255,.55),0 8px 20px rgba(16,42,86,.06)}.blink{position:absolute;top:20px;background:#FFD747;border-radius:999px;padding:9px 22px;font-weight:700;font-size:14px}.item{font-family:"Courier New",Courier,monospace;font-size:92px;font-weight:400;letter-spacing:1px}.item.vowel{font-family:"Courier New",Courier,monospace;font-size:62px;font-weight:400}.bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}.legal{background:#ffffff}.history{background:#ffffff}.ph{margin-top:18px;background:#ffffffcc;border-radius:16px;padding:22px}.progressRow{display:flex;align-items:center;gap:12px;margin-top:14px}.progressTrack{height:12px;background:#e2e5e8;border-radius:999px;overflow:hidden;flex:1}.progressFill{height:100%;width:0;background:#5E69FF;border-radius:999px;transition:width .2s linear}.timeLeft{font-weight:800;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}@media(max-width:760px){.video,.runner,.bottom{grid-template-columns:1fr}.tag{display:none}}
+</style><style>
+.item.vowel{font-size:92px}
+.vowel-stack{display:flex;flex-direction:column;align-items:center;line-height:1.04}
+.vowel-letter{font-size:1em}
+.vowel-example{font-size:.25em;line-height:1.3;margin-top:9px;letter-spacing:0}
+.vowel-center{display:inline-grid;grid-template-columns:1fr auto 1fr;align-items:center;width:100%;position:relative}
+.vowel-center .vowel-letter{grid-column:2;grid-row:1}
+.vowel-side{grid-column:1;grid-row:1;justify-self:end;margin-right:12px;font-size:.25em;letter-spacing:0}
+.readback-card{margin-top:14px;border:1px solid #dce6eb;border-radius:16px;background:#f9fbfd;padding:16px}
+.readback-card[hidden]{display:none}
+.readback-title{font-size:15px;margin-bottom:12px}
+.readback-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.readback-group{background:white;border-radius:10px;padding:10px;text-align:center;border:1px solid #e5edf1}
+.readback-values{display:flex;flex-direction:column;gap:4px;font-family:"Courier New",monospace;font-size:18px}
+.readback-arrow{color:#8dbfc9;font-size:24px;line-height:1.1;margin-top:5px}
+</style><style>
+.readback-groups{display:flex;align-items:flex-start;gap:22px;overflow-x:auto;padding-bottom:10px}
+.readback-column{flex:0 0 auto;min-width:145px;border:1px solid #e5edf1;border-radius:10px;background:white;padding:12px}
+.readback-line{display:flex;gap:4px;white-space:nowrap;font:18px/1.6 "Courier New",monospace}
+.readback-line span{min-width:1ch}
+.readback-next{color:#91bfc8;text-align:center;font-size:20px;padding:8px 0 0}
+</style><style>
+.item,.item.vowel{font-size:92px;line-height:1;position:relative;min-width:260px;min-height:150px;display:flex;align-items:center;justify-content:center}
+.vowel-anchor{position:relative;width:260px;height:150px;display:block}
+.vowel-primary{position:absolute;left:50%;top:24px;transform:translateX(-50%);font-size:92px;line-height:1;white-space:nowrap}
+.vowel-helper{position:absolute;right:calc(50% + 55px);top:57px;font-size:22px;white-space:nowrap}
+.vowel-example-fixed{position:absolute;left:50%;top:121px;transform:translateX(-50%);font-size:22px;white-space:nowrap}
+.readback-card{background:#f9fbfd;padding:18px}
+.readback-groups{display:flex;align-items:stretch;gap:8px;overflow-x:auto}
+.readback-column{min-width:0;flex:0 0 auto;padding:10px 12px;background:white;border:1px solid #e2e9ee;border-radius:12px}
+.readback-line{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));column-gap:10px;font:18px/1.8 "Courier New",monospace;white-space:nowrap}
+.readback-cell{text-align:center;min-width:2.5ch}
+.readback-connector{display:flex;align-items:center;justify-content:space-between;flex-direction:column;color:#9ac9d1;font-size:23px;padding:14px 0;min-width:22px}
+.readback-title{display:none}
+</style><style>
+.readback-card{padding:14px;background:#f9fbfd}
+.readback-groups{display:grid;column-gap:42px;row-gap:16px;justify-content:start;align-items:start;overflow-x:auto}
+.readback-column{padding:0;background:transparent;border:0;border-radius:0}
+.readback-line{display:grid;grid-template-columns:repeat(5,minmax(4ch,max-content));column-gap:14px;align-items:center;justify-content:start;font:17px/1.8 "Courier New",monospace;white-space:nowrap}
+.readback-cell{min-width:8ch;text-align:center;font-size:15px}
+.readback-connector{display:none}
+</style><style>.legal-term{font-size:24px;font-weight:700;margin:18px 0 8px}.legal-definition{font-size:16px;line-height:1.5}</style><style>
+.readback-groups{column-gap:38px;row-gap:0;max-width:100%;overflow-x:auto}
+.readback-line{column-gap:10px;line-height:2}
+.readback-cell{min-width:7ch}
+@media(max-width:700px){.readback-groups{grid-template-columns:1fr!important}.readback-column{margin-bottom:14px}}
+</style><style>
+.readback-groups{column-gap:90px}
+.readback-vowel-line .readback-cell:not(:last-child)::after{content:",";position:absolute;right:-.35em}
+.readback-vowel-line .readback-cell{position:relative;min-width:9ch;text-align:left}
+.readback-vowel-line{column-gap:18px}
+@media(max-width:700px){.readback-groups{column-gap:24px}}
+</style><style>
+.readback-card{padding:18px;background:#f9fbfd}
+.readback-groups{display:grid;gap:40px;overflow:visible;max-width:100%;align-items:start}
+.readback-column{min-width:0;padding:0;border:0;background:transparent}
+.readback-textline{font:15px/1.8 "Courier New",Courier,monospace;white-space:nowrap;letter-spacing:-.35px}
+.coffee-support{margin-top:22px;padding-top:16px;border-top:1px solid #e7eaf0}
+@media(max-width:1100px){.readback-groups{gap:24px}.readback-textline{font-size:13px}}
+@media(max-width:700px){.readback-groups{grid-template-columns:1fr!important;gap:18px}.readback-textline{font-size:14px}}
 </style></head><body><div class="w"><div class="head"><div style="font-size:46px">☀️</div><div class="brand">Drills Dashboard</div><div id="todayDate" class="todayDate"></div></div>
 <section class="card video"><div><h1 style="font-size:30px;letter-spacing:-.4px">🎬 Daily Video</h1></div><div class="vf">Today's assigned video<button class="exp" onclick="this.parentElement.requestFullscreen()">⛶ Expand</button></div></section>
 <section class="card acc"><h1 style="font-size:30px;letter-spacing:-.4px">🎯 Accuracy Drills</h1>
 <div class="tabs"><button class="tab active" data-main="letters" style="background:#5E69FF;color:white">Letters</button><button class="tab" data-main="numbers" style="background:#AA2377;color:white">Numbers</button><button class="tab" data-main="mixed" style="background:#F87C47;color:#19455E">Letters + Numbers</button></div>
 <div class="tabs sub" id="subs"><button class="tab active" data-sub="alphabet">Alphabet</button><button class="tab" data-sub="consonants">Initial + Final Consonants</button><button class="tab" data-sub="vowels">Consonants + Vowel Sounds</button></div>
-<div id="alphaNote" style="margin-top:14px;font-weight:700">Finger spelling practice, initial side only</div><div class="tabs sub" id="numberSubs" style="display:none"><button class="tab active" data-numbermode="cardinal">0–100</button><button class="tab" data-numbermode="ordinal">Ordinals</button></div><div class="runner"><div><label>Speed (items/minute)</label><select id="speed"><option>20</option><option>40</option><option>60</option><option>80</option><option selected>100</option><option>120</option><option>140</option><option>160</option><option>180</option><option>200</option><option>220</option><option>240</option></select><label>Time</label><select id="mins"><option value="1">1 minute</option><option value="2" selected>2 minutes</option><option value="3">3 minutes</option><option value="4">4 minutes</option><option value="5">5 minutes</option></select><button class="start" id="start">▶ Start</button></div><div><div class="display"><div class="blink" id="blink">Don't forget to blink!</div><div class="item" id="item">A</div></div><div class="progressRow"><div class="progressTrack"><div class="progressFill" id="progressFill"></div></div><div class="timeLeft" id="timeLeft">2:00</div></div></div></div></section>
-<div class="bottom"><section class="card legal"><h2>📖 Legal Term of the Week</h2></section><section class="card history"><h2>📅 On This Day</h2></section></div></div>
+<div id="alphaNote" style="margin-top:14px;font-weight:700">Finger spelling practice, initial side only</div><div class="tabs sub" id="numberSubs" style="display:none"><button class="tab active" data-numbermode="cardinal">0–100</button><button class="tab" data-numbermode="ordinal">Ordinals</button></div><div class="runner"><div><label>Speed (items/minute)</label><select id="speed"><option>20</option><option>40</option><option>60</option><option>80</option><option selected>100</option><option>120</option><option>140</option><option>160</option><option>180</option><option>200</option><option>220</option><option>240</option></select><label>Time</label><select id="mins"><option value="1">1 minute</option><option value="2">2 minutes</option><option value="3" selected>3 minutes</option><option value="4">4 minutes</option><option value="5">5 minutes</option></select><button class="start" id="start">▶ Start</button></div><div><div class="display"><div class="blink" id="blink" style="display:none"></div><div class="item" id="item">A</div></div><div id="readbackCard" class="readback-card" hidden><div id="readbackGroups" class="readback-groups"></div></div><div class="progressRow"><div class="progressTrack"><div class="progressFill" id="progressFill"></div></div><div class="timeLeft" id="timeLeft">3:00</div></div></div></div></section>
+<div class="bottom"><section class="card legal"><h2>📖 Legal Term of the Week</h2><div id="legalTerm" class="legal-term"></div><div id="legalDefinition" class="legal-definition"></div><div class="coffee-support"><script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="vanessacr" data-color="#5F7FFF" data-emoji="☕" data-font="Inter" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00"></script></div></section><section class="card history"><h2>📅 On This Day</h2><div class="history-tagline">Hard Copy Practice</div><div id="historyEvents" aria-live="polite">Loading events…</div></section></div></div>
 <script>
-const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),I=["B-","D-","F-","G-","H-","J-","K-","L-","M-","N-","P-","Q-","R-","S-","T-","V-","W-","X-","Y-","Z-"],F=["-B","-D","-F","-G","-J","-K","-L","-M","-N","-P","-Q","-R","-S","-T","-V","-X","-Z"],V=["long A","short A","long E","short E","long I","short I","long O","short O","long U","short U","AO (too)","OU (how)","AU (saw)","OI (boy)"],N=Array.from({length:101},(_,i)=>""+i);let main="letters",sub="alphabet",numberMode="cardinal",timer,end,last="",paused=false,remaining=0,runStarted=0,runTotal=0,intervalMs=0,progressTimer=null;const item=document.getElementById("item"),blink=document.getElementById("blink"),subs=document.getElementById("subs");function ordinal(n){const j=n%10,k=n%100;let suf=(j===1&&k!==11)?"st":(j===2&&k!==12)?"nd":(j===3&&k!==13)?"rd":"th";return n+suf}
-function pool(){if(main==="numbers")return numberMode==="ordinal"?N.map(x=>ordinal(+x)):N;if(main==="mixed")return [...A,...I,...F,...V,...N];if(sub==="alphabet")return A;if(sub==="consonants")return [...I,...F];return [...I,...F,...V]}function next(){let p=pool(),n=p[Math.floor(Math.random()*p.length)];while(p.length>1&&n===last)n=p[Math.floor(Math.random()*p.length)];last=n;item.textContent=n;item.classList.toggle("vowel",V.includes(n))}document.querySelectorAll("[data-main]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-main]").forEach(x=>x.classList.remove("active"));b.classList.add("active");main=b.dataset.main;subs.style.display=main==="letters"?"flex":"none";document.getElementById("numberSubs").style.display=main==="numbers"?"flex":"none";document.getElementById("alphaNote").style.display=(main==="letters"&&sub==="alphabet")?"block":"none";resetDrill()});document.querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-sub]").forEach(x=>x.classList.remove("active"));b.classList.add("active");sub=b.dataset.sub;document.getElementById("alphaNote").style.display=sub==="alphabet"?"block":"none";resetDrill()});document.querySelectorAll("[data-numbermode]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-numbermode]").forEach(x=>x.classList.remove("active"));b.classList.add("active");numberMode=b.dataset.numbermode;resetDrill()});
+const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),I=["B-","D-","F-","G-","H-","J-","K-","L-","M-","N-","P-","Q-","R-","S-","T-","V-","W-","X-","Y-","Z-"],F=["-B","-D","-F","-G","-J","-K","-L","-M","-N","-P","-Q","-R","-S","-T","-V","-X","-Z"],V=["long A","short A","long E","short E","long I","short I","long O","short O","long U","short U","AO (too)","OU (how)","AU (saw)","OI (boy)"],N=Array.from({length:101},(_,i)=>""+i);let main="letters",sub="alphabet",numberMode="cardinal",timer,end,last="",paused=false,remaining=0,runStarted=0,runTotal=0,intervalMs=0,progressTimer=null,openingTimeout=null,shownItems=[];const item=document.getElementById("item"),blink=document.getElementById("blink"),subs=document.getElementById("subs");function ordinal(n){const j=n%10,k=n%100;let suf=(j===1&&k!==11)?"st":(j===2&&k!==12)?"nd":(j===3&&k!==13)?"rd":"th";return n+suf}
+function pool(){if(main==="numbers")return numberMode==="ordinal"?N.map(x=>ordinal(+x)):N;if(main==="mixed")return [...A,...I,...F,...V,...N];if(sub==="alphabet")return A;if(sub==="consonants")return [...I,...F];return [...I,...F,...V]}function next(){let p=pool(),n=p[Math.floor(Math.random()*p.length)];while(p.length>1&&n===last)n=p[Math.floor(Math.random()*p.length)];last=n;shownItems.push(n);renderItem(n)}function renderItem(n){
+ item.classList.toggle("vowel",V.includes(n));
+ if(!V.includes(n)){item.textContent=n;return}
+ const match=n.match(/^(long|short) ([AEIOU])$/);
+ const parts=n.match(/^([A-Z]+) \(([^)]+)\)$/);
+ const vowel=match?match[2]:(parts?parts[1]:n);
+ item.innerHTML='<span class="vowel-anchor"><span class="vowel-primary"></span><span class="vowel-helper"></span><span class="vowel-example-fixed"></span></span>';
+ item.querySelector(".vowel-primary").textContent=vowel;
+ item.querySelector(".vowel-helper").textContent=match?match[1]:"";
+ item.querySelector(".vowel-example-fixed").textContent=parts?parts[2]:"";
+}
+function renderReadback(){
+ const target=document.getElementById("readbackGroups");
+ target.replaceChildren();
+ const groups=[];
+ for(let i=0;i<shownItems.length;i+=5)groups.push(shownItems.slice(i,i+5));
+ const columns=groups.length<=16?1:groups.length<=32?2:3;
+ const rows=Math.ceil(groups.length/columns);
+ target.style.gridTemplateColumns=`repeat(${columns},minmax(0,1fr))`;
+ for(let col=0;col<columns;col++){
+  const column=document.createElement("div");column.className="readback-column";
+  for(let row=0;row<rows;row++){
+   const group=groups[col*rows+row];if(!group)continue;
+   const line=document.createElement("div");line.className="readback-textline";
+   line.textContent=group.map(v=>v.replace(/^(AO|OU|AU|OI) \([^)]*\)$/,"$1")).join(", ");
+   column.append(line);
+  }
+  target.append(column);
+ }
+ document.getElementById("readbackCard").hidden=false;
+}
+document.querySelectorAll("[data-main]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-main]").forEach(x=>x.classList.remove("active"));b.classList.add("active");main=b.dataset.main;subs.style.display=main==="letters"?"flex":"none";document.getElementById("numberSubs").style.display=main==="numbers"?"flex":"none";document.getElementById("alphaNote").style.display=(main==="letters"&&sub==="alphabet")?"block":"none";resetDrill()});document.querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-sub]").forEach(x=>x.classList.remove("active"));b.classList.add("active");sub=b.dataset.sub;document.getElementById("alphaNote").style.display=sub==="alphabet"?"block":"none";resetDrill()});document.querySelectorAll("[data-numbermode]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-numbermode]").forEach(x=>x.classList.remove("active"));b.classList.add("active");numberMode=b.dataset.numbermode;resetDrill()});
 
-document.getElementById("mins").onchange=()=>{document.getElementById("timeLeft").textContent=document.getElementById("mins").value+":00"};
+document.getElementById("mins").onchange=resetDrill;
+document.getElementById("speed").onchange=resetDrill;
 const startBtn=document.getElementById("start"), displayBox=document.querySelector(".display");
 function setStartColor(){
  const colors={letters:"#5E69FF",numbers:"#AA2377",mixed:"#F87C47"};
  startBtn.style.background=colors[main];
+ document.getElementById("progressFill").style.background=colors[main];
 }
 function resetDrill(){
- clearInterval(timer);clearInterval(progressTimer);
+ clearInterval(timer);clearInterval(progressTimer);clearTimeout(openingTimeout);
+ shownItems=[];document.getElementById("readbackCard").hidden=true;
  paused=false;remaining=0;
  startBtn.textContent="▶ Start";setStartColor();
  displayBox.classList.remove("messageMode");
  blink.style.display="none";
  document.getElementById("progressFill").style.width="0%";
  document.getElementById("timeLeft").textContent=document.getElementById("mins").value+":00";
- next();
+ renderItem(pool()[0]);
 }
 
 function updateProgress(){
@@ -36,9 +130,9 @@ function updateProgress(){
  document.getElementById("timeLeft").textContent=Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0");
 }
 function finishRun(){
- clearInterval(timer);clearInterval(progressTimer);paused=false;remaining=0;
+ clearTimeout(openingTimeout);clearInterval(timer);clearInterval(progressTimer);paused=false;remaining=0;
  document.getElementById("progressFill").style.width="100%";document.getElementById("timeLeft").textContent="0:00";
- blink.style.display="none";displayBox.classList.add("messageMode");item.classList.remove("vowel");item.textContent="Now read back!";startBtn.textContent="▶ Start";
+ blink.style.display="none";displayBox.classList.add("messageMode");item.classList.remove("vowel");item.textContent="Now read back!";startBtn.textContent="▶ Start";renderReadback();
 }
 function runTimers(){
  runStarted=Date.now();
@@ -57,13 +151,13 @@ startBtn.onclick=()=>{
    const used=Date.now()-runStarted;remaining=Math.max(0,remaining-used);updateProgress();
    paused=true;startBtn.textContent="▶ Resume";return;
  }
- clearInterval(timer);clearInterval(progressTimer);displayBox.classList.add("messageMode");
- blink.style.display="none";item.textContent="Don't forget to blink!";
+ clearInterval(timer);clearInterval(progressTimer);clearTimeout(openingTimeout);shownItems=[];document.getElementById("readbackCard").hidden=true;displayBox.classList.remove("messageMode");
+ blink.style.display="none";renderItem(pool()[0]);
  const sVal=+document.getElementById("speed").value,m=+document.getElementById("mins").value;
  intervalMs=60000/sVal;runTotal=m*60000;remaining=runTotal;
  document.getElementById("progressFill").style.width="0%";document.getElementById("timeLeft").textContent=m+":00";
  startBtn.textContent="⏸ Pause";
- setTimeout(()=>{displayBox.classList.remove("messageMode");next();runTimers()},1500);
+ next();runTimers();
 };
 document.getElementById("todayDate").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
 const weekdayVideos={
@@ -78,11 +172,53 @@ const today=new Date().getDay();
 const vf=document.querySelector(".vf");
 const videoHeading=document.querySelector(".video h1");
 if(today>=1&&today<=5){
-  vf.innerHTML='<iframe width="100%" height="100%" style="border:0;border-radius:18px" src="https://www.youtube.com/embed/'+weekdayVideos[today]+'" title="'+weekdayNames[today]+' Daily Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><button class="exp" id="popVideo" type="button">↗ Pop out</button>';document.getElementById("popVideo").onclick=()=>window.open("https://www.youtube.com/watch?v="+weekdayVideos[today],"_blank","noopener,noreferrer");
+  vf.innerHTML='<iframe width="100%" height="100%" style="border:0;border-radius:18px" referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/'+weekdayVideos[today]+'" title="'+weekdayNames[today]+' Daily Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe><button class="exp" id="popVideo" type="button">↗ Pop out</button>';document.getElementById("popVideo").onclick=()=>window.open("https://www.youtube.com/watch?v="+weekdayVideos[today],"_blank","noopener,noreferrer");
   videoHeading.innerHTML='🎬 Daily Video';
 }
 
-const day=new Date().getDay();if(day===0||day===6){const v=document.querySelector(".video");v.style.display="block";v.style.padding="18px 26px";document.querySelector(".vf").style.display="none";}</script></body></html>
+const day=new Date().getDay();if(day===0||day===6){const v=document.querySelector(".video");v.style.display="block";v.style.padding="18px 26px";document.querySelector(".vf").style.display="none";}
+
+const legalTerms=[["Affidavit", "A written statement confirmed under oath."], ["Allegation", "A claim that has not yet been proven."], ["Appeal", "A request for a higher court to review a decision."], ["Arbitration", "A process in which a neutral person decides a dispute."], ["Arraignment", "A court hearing where criminal charges are formally presented."], ["Bail", "Money or conditions used to secure a defendant’s return to court."], ["Bench trial", "A trial decided by a judge without a jury."], ["Beyond a reasonable doubt", "The high standard of proof required for a criminal conviction."], ["Brief", "A written argument submitted to a court."], ["Burden of proof", "The duty to prove a claim or charge."], ["Cause of action", "A legal reason for bringing a lawsuit."], ["Chambers", "A judge’s private office."], ["Citation", "A notice to appear in court or a reference to legal authority."], ["Civil case", "A legal dispute that is not a criminal prosecution."], ["Claimant", "A person who makes a legal claim."], ["Class action", "A lawsuit brought on behalf of a group with similar claims."], ["Closing argument", "A lawyer’s final summary to the judge or jury."], ["Complaint", "A document that starts a civil lawsuit."], ["Contempt of court", "Conduct that disobeys or disrespects a court’s authority."], ["Continuance", "A postponement of a hearing or trial."], ["Contract", "A legally enforceable agreement."], ["Counterclaim", "A claim brought by a defendant against a plaintiff."], ["Cross-examination", "Questioning a witness by the opposing party."], ["Damages", "Money awarded to compensate for harm or loss."], ["Defendant", "The person or party accused or sued."], ["Deposition", "Sworn testimony taken outside the courtroom."], ["Discovery", "The process of exchanging information before trial."], ["Dismissal", "The ending of a case or claim without further proceedings."], ["Docket", "The court’s official list of cases or scheduled proceedings."], ["Due process", "The right to fair legal procedures."], ["Exhibit", "A document or object presented as evidence."], ["Expert witness", "A witness who gives opinions based on specialized knowledge."], ["Felony", "A serious crime usually punishable by more than one year in prison."], ["Foundation", "Preliminary facts needed before evidence may be admitted."], ["Grand jury", "A group that decides whether criminal charges should be issued."], ["Habeas corpus", "A legal request to challenge unlawful detention."], ["Hearsay", "An out-of-court statement offered to prove what it says."], ["Impeachment", "Using evidence to challenge a witness’s credibility."], ["Indictment", "A formal criminal charge, often issued by a grand jury."], ["Injunction", "A court order requiring someone to do or stop doing something."], ["Interrogatories", "Written questions one party must answer under oath."], ["Judgment", "A court’s official decision resolving a claim."], ["Jurisdiction", "A court’s legal authority to hear a case."], ["Jury instruction", "A judge’s explanation of the law to the jury."], ["Liability", "Legal responsibility for an act or harm."], ["Litigation", "The process of resolving a dispute through a lawsuit."], ["Mediation", "A process in which a neutral person helps parties reach agreement."], ["Misdemeanor", "A less serious criminal offense."], ["Mistrial", "A trial ended without a valid verdict."], ["Motion", "A formal request asking the court to take action."], ["Negligence", "Failure to use reasonable care."], ["Notary public", "An official authorized to witness certain signatures and oaths."], ["Objection", "A formal challenge to a question or evidence."], ["Opening statement", "A lawyer’s introduction to the case at trial."], ["Order", "A direction issued by a court."], ["Overruled", "A judge’s decision rejecting an objection."], ["Parole", "Supervised release from prison before a sentence fully ends."], ["Perjury", "Knowingly making a false statement under oath."], ["Plaintiff", "The person or party who files a civil lawsuit."], ["Plea", "A defendant’s formal response to a criminal charge."], ["Plea bargain", "An agreement to resolve criminal charges without a trial."], ["Precedent", "An earlier court decision used as legal guidance."], ["Preliminary hearing", "A hearing to determine whether a criminal case may proceed."], ["Probable cause", "Reasonable grounds to believe a crime occurred or evidence exists."], ["Probate", "The legal process of handling a deceased person’s estate."], ["Pro se", "Representing oneself without a lawyer."], ["Prosecution", "The side bringing criminal charges."], ["Protective order", "A court order limiting certain conduct or disclosures."], ["Rebuttal", "Evidence or argument offered to answer the opposing side."], ["Record", "The official account of court proceedings and filed materials."], ["Redirect examination", "Questions asked by the original attorney after cross-examination."], ["Remand", "To send a case back to a lower court for further action."], ["Restitution", "Payment ordered to repay a victim for losses."], ["Restraining order", "A court order restricting someone’s actions."], ["Sentence", "The punishment imposed after a criminal conviction."], ["Settlement", "An agreement resolving a dispute without a final trial decision."], ["Sidebar", "A discussion with the judge outside the jury’s hearing."], ["Standard of proof", "The level of certainty required to prove a case."], ["Statute", "A law enacted by a legislative body."], ["Statute of limitations", "The deadline for bringing a legal claim or charge."], ["Stipulation", "A fact or procedure agreed upon by the parties."], ["Subpoena", "An order to appear or provide evidence."], ["Summary judgment", "A decision made without trial when no material factual dispute requires one."], ["Sustained", "A judge’s decision agreeing with an objection."], ["Testimony", "Statements given by a witness under oath."], ["Tort", "A civil wrong that may create legal liability."], ["Transcript", "A written record of spoken proceedings."], ["Trial", "A formal proceeding to decide disputed issues."], ["Verdict", "A jury’s or judge’s finding on the case."], ["Voir dire", "Questioning potential jurors before selection."], ["Waiver", "The voluntary giving up of a known right."], ["Warrant", "A legal order authorizing a specific action."], ["Witness", "A person who provides evidence or testimony."], ["Writ", "A formal written order issued by a court."], ["Acquittal", "A finding that a defendant is not guilty."], ["Admissible evidence", "Evidence the court allows to be considered."], ["Authentication", "Showing that evidence is what its proponent claims."], ["Chain of custody", "Documentation of who handled evidence and when."], ["Default judgment", "A judgment entered when a party fails to respond or appear."], ["Motion in limine", "A request to decide whether evidence may be used at trial."]];
+function showLegalTerm(){
+ const now=new Date();
+ // Anchor the rotation to Monday, October 5, 2026, in the viewer's local calendar.
+ const todayUTC=Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
+ const weekStartUTC=todayUTC-((now.getDay()+6)%7)*86400000;
+ const anchor=Date.UTC(2026,9,5);
+ const weeks=Math.floor((weekStartUTC-anchor)/(7*86400000));
+ const index=((weeks%legalTerms.length)+legalTerms.length)%legalTerms.length;
+ document.getElementById("legalTerm").textContent=legalTerms[index][0];
+ document.getElementById("legalDefinition").textContent=legalTerms[index][1];
+}
+showLegalTerm();
+
+const eventsBox=document.getElementById("historyEvents");
+function historyDayKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+function stableHash(t){let h=2166136261;for(const c of t){h=Math.imul(h^c.charCodeAt(0),16777619)}return h>>>0}
+async function showHistory(){
+ const d=new Date(),mm=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");
+ try{
+   const url=`https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/${mm}/${dd}`;
+   const response=await fetch(url);
+   if(!response.ok)throw new Error("Wikipedia unavailable");
+   const data=await response.json();
+   const candidates=(data.events||[]).filter(e=>Number.isInteger(e.year)&&e.year>=1&&e.year<=d.getFullYear()&&e.text);
+   // Deterministic random sample for each date: same eight throughout the day.
+   const key=historyDayKey(d);
+   const shuffled=candidates.map(e=>({e,score:stableHash(key+"|"+e.year+"|"+e.text)})).sort((a,b)=>a.score-b.score);
+   const selected=shuffled.slice(0,8).map(x=>x.e).sort((a,b)=>b.year-a.year);
+   if(!selected.length)throw new Error("No events available");
+   eventsBox.replaceChildren();
+   for(const e of selected){
+     const line=document.createElement("div");line.className="history-event";
+     const yr=document.createElement("strong");yr.textContent=e.year+" CE";
+     const body=document.createElement("span");body.textContent=e.text;
+     line.append(yr,body);eventsBox.append(line);
+   }
+ }catch(err){eventsBox.textContent="Historical events are temporarily unavailable.";}
+}
+showHistory();
+</script></body></html>
 <style>
 .display.messageMode .blink{display:none!important}
 .display.messageMode .item{font-family:"Courier New",Courier,monospace!important;font-size:48px!important;font-weight:700!important}
@@ -111,4 +247,9 @@ const day=new Date().getDay();if(day===0||day===6){const v=document.querySelecto
 #subs .tab.active,#numberSubs .tab.active{background:#19455E!important;color:white!important;border-color:#19455E!important}
 #subs .tab,#numberSubs .tab{background:#f4f1ed;border-color:#ded8d1;color:#19455E}
 </style>
-<script>setStartColor();</script>
+<script>setStartColor();</script><style>
+.history-tagline{font-size:15px;margin:6px 0 14px;font-weight:400}
+.history-event{display:grid;grid-template-columns:76px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid #e9e4e5;font-size:14px;line-height:1.45}
+.history-event:last-child{border-bottom:0}
+.history-event strong{font-weight:600}
+</style>
